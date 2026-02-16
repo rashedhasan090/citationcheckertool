@@ -133,12 +133,13 @@ class CitationChecker:
                 found, meta = validate_doi(result.doi)
                 result.doi_resolved = found
                 if found and meta:
-                    result.title = meta.get("title", [""])[0]
+                    titles = meta.get("title") or [""]
+                    result.title = titles[0] if titles else None
                     cr_year = meta.get("published-print") or meta.get("published-online") or meta.get("created")
                     if cr_year:
-                        y = cr_year.get("date-parts", [[]])[0]
-                        if y:
-                            result.year = str(y[0])
+                        parts = cr_year.get("date-parts") or []
+                        if parts and len(parts[0]) > 0:
+                            result.year = str(parts[0][0])
                 if not found:
                     result.issues.append("DOI not found in CrossRef (possible fake or typo).")
                     result.suggestions.append("Verify the DOI at https://doi.org/" + result.doi)
