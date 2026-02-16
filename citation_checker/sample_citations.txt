@@ -1,0 +1,8 @@
+@article{example2020,
+  author = {Smith, John and Doe, Jane},
+  title = {An example paper},
+  year = {2020},
+  doi = {10.1000/xyz123}
+}
+
+Smith, A. B., & Jones, C. D. (2019). Another study. Journal of Examples, 5(1), 1-10. https://doi.org/10.1038/s41586-019-0000-0
