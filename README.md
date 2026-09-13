@@ -1,91 +1,73 @@
 # CiteGuard 🛡️
 
-**Free, open-source deep citation verification and validation — CLI + web GUI.**
+**Professional citation verification and research-integrity intelligence — CLI + SaaS web application.**
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Frashedhasan090%2Fcitationcheckertool)
+CiteGuard verifies whether references resolve to real scholarly records, checks whether cited metadata agrees with authoritative indexes, and adds a research-integrity layer for mismatched identifiers, possible composite citations, post-publication updates, retractions, and evidence provenance.
 
-CiteGuard is an evidence-first alternative for researchers who want to check whether references resolve to real scholarly records and whether the cited metadata agrees with authoritative indexes. It is not affiliated with CiteTrue and does not copy CiteTrue's proprietary code, branding, or interface.
+> CiteGuard is an independent product. It is not affiliated with CiteTrue, GPTZero, Scite, or other commercial research-integrity platforms and does not copy their proprietary code, data, models, branding, or interfaces.
 
-## What it checks
+## CiteGuard 3.0
 
-- Multi-source existence verification: **Crossref, OpenAlex, Semantic Scholar, PubMed, arXiv, Open Library**
-- **Fast Verify**: Crossref + OpenAlex
-- **Deep Verify**: wider databases + multiple search-query variants + cross-source consensus
-- DOI, title, author, year, and venue agreement
-- Retraction signal when OpenAlex marks a work as retracted
-- Confidence score with transparent mismatch notices
-- Optional **claim-support signal** using the matched title/abstract
-- **Citation Finder** for real papers from a topic, claim, or partial citation
-- Suggested nearby/replacement records when a citation cannot be confidently resolved
-- Batch input: plain references, numbered lists, **BibTeX, RIS, PDF, DOCX, TXT/Markdown**
-- Export: **CSV, JSON, PDF**
-- Parallel verification for large bibliographies
-- No account, credits, or subscription
+- Crossref, OpenAlex, Semantic Scholar, PubMed, arXiv, and Open Library evidence
+- Fast Verify and wider Deep Verify
+- Research Integrity Score with low / moderate / high / critical triage levels
+- Identifier, title, author, year, and venue mismatch taxonomy
+- Citation Fingerprint analysis for possible composite/amalgamated references
+- Retraction, correction, and expression-of-concern signals where scholarly metadata exposes them
+- Citation counts and open-access metadata where available
+- Optional claim-to-source alignment screening
+- Citation Finder / evidence discovery
+- Batch input: plain references, BibTeX, RIS, PDF, DOCX, TXT/Markdown
+- CSV, JSON, and PDF reports
+- User accounts, credit ledger, tier entitlements, history, and superadmin console
+- Salted PBKDF2 password hashing; plaintext credentials are never committed to the repository
 
-> Important: `not_found` is not proof that a reference is fabricated. Bibliographic coverage is incomplete; manually review uncertain or missing records.
+## Plans
 
-## Install as a CLI
+| Plan | Price | Credits | Key capabilities |
+|---|---:|---:|---|
+| Free | $0 | 100 welcome credits | Fast Verify, Citation Finder, CSV |
+| Researcher | $9/mo | 1,500/mo | Deep Verify, Integrity Score, post-publication intelligence, JSON/PDF |
+| Pro | $19/mo | 5,000/mo | Batch audit, claim alignment, Citation Fingerprint, expanded discovery |
+| Lab | $49/mo | 20,000/mo | High-volume audit, team-ready reporting, advanced integrity analytics |
+
+The configured superadmin receives unlimited access to all capabilities.
+
+## Live application
+
+https://citeguard-2uw9.onrender.com
+
+## Local web app
 
 ```bash
-git clone https://github.com/rashedhasan090/citationcheckertool.git
-cd citationcheckertool
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -e .
-```
-
-Then:
-
-```bash
-citeguard verify references.bib
-citeguard verify paper.pdf --deep
-citeguard verify --text "Vaswani et al. (2017). Attention Is All You Need." --deep --context "Transformers replace recurrence with self-attention."
-citeguard verify references.txt --deep -o report.csv
-citeguard verify references.txt --deep -o report.json
-citeguard verify references.txt --deep -o report.pdf
-citeguard find "LLM hallucinated citations in scientific writing"
-citeguard web
-```
-
-## Web GUI
-
-```bash
+source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The GUI includes **Verify citations**, **Citation Finder**, deep/fast modes, per-citation evidence, retraction warnings, alternatives, and report downloads.
+## CLI
 
-## Free deployment
+```bash
+pip install -e .
+citeguard verify references.bib
+citeguard verify paper.pdf --deep
+citeguard find "hallucinated citations in scientific writing"
+```
 
-### Render
+## Production configuration
 
-Use the **Deploy to Render** button at the top of this README. The repo includes a root-level `render.yaml` Blueprint configured for a free Python web service, Streamlit health checks, and automatic deployment only after GitHub CI passes.
+Never commit credentials, reset tokens, database URLs, or API secrets. Configure them in Render environment variables or another secret manager.
 
-Build command: `pip install -r requirements.txt`
+CiteGuard supports PostgreSQL through SQLAlchemy and uses SQLite only as a development fallback. Attach a managed PostgreSQL database before onboarding paid users because an ephemeral hosting filesystem can be reset during redeploys.
 
-Start command: `streamlit run app.py --server.address 0.0.0.0 --server.port $PORT`
+Tier entitlements are implemented. Stripe payment links are read from environment variables, so billing URLs and secrets do not need to enter Git history. Subscription/webhook synchronization should be enabled before accepting production recurring payments.
 
-### Streamlit Community Cloud
+## Verification philosophy
 
-1. Sign in at Streamlit Community Cloud with GitHub.
-2. Create a new app from `rashedhasan090/citationcheckertool`.
-3. Branch: `main`; main file: `app.py`.
-4. Deploy. No secrets are required for the public scholarly APIs used by default.
+CiteGuard does not treat an LLM as the authority on whether a publication exists. It retrieves evidence from scholarly indexes, normalizes records, scores DOI/title/author/year/venue consistency, checks cross-source corroboration, and reports uncertainty explicitly.
 
-## Verification design
-
-CiteGuard does not use an LLM as an oracle for publication existence. It searches bibliographic indexes, normalizes returned records, and computes a weighted metadata score. DOI equality is strongest evidence; otherwise title, author, year, and venue agreement are combined. Deep mode broadens sources and search strategies and rewards cross-source corroboration.
-
-The optional claim-support score is explicitly a **screening signal**, not a factual entailment guarantee. It compares the supplied claim with the title/abstract text available from the matched record and should be followed by reading the publication.
-
-## Privacy
-
-Citations are sent only to the scholarly APIs required for lookup. Uploaded files are parsed locally by the running app. CiteGuard does not require an account and does not contain telemetry.
-
-## Responsible-use note
-
-Use CiteGuard to audit references, review manuscripts, and detect citation problems. Do not use it to fabricate references or to misrepresent unverified sources as genuine.
+A `not_found` result is not proof of fabrication. Research-integrity scores are triage signals, not accusations of misconduct.
 
 ## License
 
