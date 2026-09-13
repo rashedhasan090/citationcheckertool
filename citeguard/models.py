@@ -26,6 +26,13 @@ class Candidate:
     url: Optional[str] = None
     abstract: Optional[str] = None
     is_retracted: bool = False
+    integrity_updates: list[str] = field(default_factory=list)
+    citation_count: Optional[int] = None
+    influential_citation_count: Optional[int] = None
+    is_open_access: Optional[bool] = None
+    oa_url: Optional[str] = None
+    publication_type: Optional[str] = None
+    publisher: Optional[str] = None
     source_id: Optional[str] = None
     raw: dict[str, Any] = field(default_factory=dict, repr=False)
 
@@ -51,6 +58,12 @@ class VerificationResult:
     support_note: Optional[str] = None
     alternatives: list[Candidate] = field(default_factory=list)
     deep_verified: bool = False
+    integrity_score: int = 0
+    risk_level: str = "unknown"
+    failure_modes: list[str] = field(default_factory=list)
+    corroborating_sources: list[str] = field(default_factory=list)
+    metadata_consistency: int = 0
+    amalgamation_risk: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
