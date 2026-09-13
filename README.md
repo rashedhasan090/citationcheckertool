@@ -2,6 +2,8 @@
 
 **Free, open-source deep citation verification and validation — CLI + web GUI.**
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Frashedhasan090%2Fcitationcheckertool)
+
 CiteGuard is an evidence-first alternative for researchers who want to check whether references resolve to real scholarly records and whether the cited metadata agrees with authoritative indexes. It is not affiliated with CiteTrue and does not copy CiteTrue's proprietary code, branding, or interface.
 
 ## What it checks
@@ -56,18 +58,20 @@ The GUI includes **Verify citations**, **Citation Finder**, deep/fast modes, per
 
 ## Free deployment
 
+### Render
+
+Use the **Deploy to Render** button at the top of this README. The repo includes a root-level `render.yaml` Blueprint configured for a free Python web service, Streamlit health checks, and automatic deployment only after GitHub CI passes.
+
+Build command: `pip install -r requirements.txt`
+
+Start command: `streamlit run app.py --server.address 0.0.0.0 --server.port $PORT`
+
 ### Streamlit Community Cloud
 
 1. Sign in at Streamlit Community Cloud with GitHub.
 2. Create a new app from `rashedhasan090/citationcheckertool`.
 3. Branch: `main`; main file: `app.py`.
 4. Deploy. No secrets are required for the public scholarly APIs used by default.
-
-### Render
-
-Build command: `pip install -r requirements.txt`
-
-Start command: `streamlit run app.py --server.address 0.0.0.0 --server.port $PORT`
 
 ## Verification design
 
